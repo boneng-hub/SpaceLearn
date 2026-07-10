@@ -1,14 +1,20 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.statistics
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-/**
- * Placeholder for the Statistics screen.
- * TODO: Show quiz history, accuracy, and streaks.
- */
 @Composable
-fun StatisticsScreen() {
-    Text(text = "Statistics Screen — placeholder")
+fun StatisticsScreen(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "Statistics",
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp)
+    )
 }
-

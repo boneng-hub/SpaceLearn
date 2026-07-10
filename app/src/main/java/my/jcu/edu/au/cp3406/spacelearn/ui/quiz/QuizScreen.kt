@@ -1,14 +1,30 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.quiz
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-/**
- * Placeholder for the Quiz screen.
- * TODO: Display questions one at a time and capture user answers.
- */
 @Composable
-fun QuizScreen() {
-    Text(text = "Quiz Screen — placeholder")
-}
+fun QuizScreen(
+    onQuizComplete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(text = "Quiz Activity")
 
+        Button(onClick = onQuizComplete) {
+            Text(text = "Complete Quiz")
+        }
+    }
+}
