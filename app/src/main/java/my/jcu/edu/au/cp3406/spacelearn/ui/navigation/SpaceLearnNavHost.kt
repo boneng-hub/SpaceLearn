@@ -5,15 +5,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizResultScreen
-import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.statistics.StatisticsScreen
 import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
 @Composable
 fun SpaceLearnNavHost(
@@ -46,29 +46,49 @@ fun SpaceLearnNavHost(
 
         composable(Screen.QuizSetup.route) {
             QuizSetupScreen(
-                onStartQuiz = {
-                    navController.navigate(Screen.Quiz.route)
-                }
-            )
-        }
-
-        composable(Screen.Quiz.route) {
-            QuizRoute(
-                onQuizComplete = { score, total ->
+                onStartQuiz = { selectedTopic ->
                     navController.navigate(
-                        Screen.QuizResult.createRoute(
-                            score = score,
-                            total = total
-                        )
-                    ) {
-                        popUpTo(Screen.QuizSetup.route) {
-                            inclusive = true
-                        }
-                    }
+                        Screen.Quiz.createRoute(selectedTopic)
+                    )
                 }
             )
         }
 
+        composable(
+            route = Screen.Quiz.route,
+            arguments = listOf(
+                navArgument(Screen.Quiz.TOPIC_ARGUMENT) {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+
+            val topicName =
+                backStackEntry.arguments?.getString(
+                    Screen.Quiz.TOPIC_ARGUMENT
+                )
+
+            val selectedTopic =
+                 QuizTopic.entries.firstOrNull { topic ->
+                     topic.name == topicName
+                 } ?: QuizTopic.SOLAR_SYSTEM
+
+            QuizRoute(
+                 topic = selectedTopic,
+                 onQuizComplete = { score, total ->
+                     navController.navigate(
+                         Screen.QuizResult.createRoute(
+                             score = score,
+                             total = total
+                         )
+                     ) {
+                         popUpTo(Screen.QuizSetup.route) {
+                             inclusive = true
+                         }
+                     }
+                 }
+            )
+        }
         composable(
             route = Screen.QuizResult.route,
             arguments = listOf(

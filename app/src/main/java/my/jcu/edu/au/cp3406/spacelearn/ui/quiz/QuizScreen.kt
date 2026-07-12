@@ -23,16 +23,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 @Composable
 fun QuizRoute(
+    topic: QuizTopic,
     onQuizComplete: (
         score: Int,
         totalQuestions: Int
     ) -> Unit,
     viewModel: QuizViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by
+    viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(topic) {
+        if (viewModel.uiState.value.questions.isEmpty()) {
+            viewModel.startQuiz(topic)
+        }
+    }
 
     LaunchedEffect(uiState.isQuizComplete) {
         if (uiState.isQuizComplete) {
@@ -49,7 +57,6 @@ fun QuizRoute(
         onNextQuestion = viewModel::moveToNextQuestion
     )
 }
-
 @Composable
 fun QuizScreen(
     uiState: QuizUiState,

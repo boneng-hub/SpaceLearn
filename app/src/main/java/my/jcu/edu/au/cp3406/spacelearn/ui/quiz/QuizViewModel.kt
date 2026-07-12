@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import my.jcu.edu.au.cp3406.spacelearn.data.local.LocalQuestionBank
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 class QuizViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizUiState())
@@ -14,13 +15,17 @@ class QuizViewModel : ViewModel() {
     val uiState: StateFlow<QuizUiState> =
         _uiState.asStateFlow()
 
-    init {
-        startQuiz()
-    }
 
-    fun startQuiz() {
+    fun startQuiz(
+        topic: QuizTopic,
+        questionCount: Int = DEFAULT_QUESTION_COUNT
+    ) {
         val quizQuestions = LocalQuestionBank.questions
-            .take(DEFAULT_QUESTION_COUNT)
+            .filter { question ->
+                question.topic == topic &&
+                        question.difficulty == Difficulty.EASY
+            }
+            .take(questionCount)
 
         _uiState.value = QuizUiState(
             questions = quizQuestions
@@ -88,11 +93,12 @@ class QuizViewModel : ViewModel() {
         }
     }
 
-    fun restartQuiz() {
-        startQuiz()
+    fun restartQuiz(
+        topic: QuizTopic
+    ) {
+        startQuiz(topic)
     }
-
     private companion object {
-        const val DEFAULT_QUESTION_COUNT = 5
+        const val DEFAULT_QUESTION_COUNT = 3
     }
 }

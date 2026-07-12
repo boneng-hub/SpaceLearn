@@ -1,5 +1,7 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.navigation
 
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
+
 sealed class Screen(val route: String) {
 
     data object Home : Screen("home")
@@ -8,9 +10,17 @@ sealed class Screen(val route: String) {
 
     data object QuizSetup : Screen("quiz_setup")
 
-    data object Quiz : Screen("quiz")
+    data object Quiz : Screen("quiz/{topic}") {
 
-    data object QuizResult : Screen("quiz_result/{score}/{total}") {
+        const val TOPIC_ARGUMENT = "topic"
+
+        fun createRoute(topic: QuizTopic): String {
+            return "quiz/${topic.name}"
+        }
+    }
+
+    data object QuizResult :
+        Screen("quiz_result/{score}/{total}") {
 
         const val SCORE_ARGUMENT = "score"
         const val TOTAL_ARGUMENT = "total"
