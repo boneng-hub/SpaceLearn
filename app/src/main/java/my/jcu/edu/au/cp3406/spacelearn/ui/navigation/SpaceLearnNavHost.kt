@@ -12,7 +12,9 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.statistics.StatisticsScreen
-
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
@@ -51,9 +53,14 @@ fun SpaceLearnNavHost(
         }
 
         composable(Screen.Quiz.route) {
-            QuizScreen(
-                onQuizComplete = {
-                    navController.navigate(Screen.QuizResult.route) {
+            QuizRoute(
+                onQuizComplete = { score, total ->
+                    navController.navigate(
+                        Screen.QuizResult.createRoute(
+                            score = score,
+                            total = total
+                        )
+                    ) {
                         popUpTo(Screen.QuizSetup.route) {
                             inclusive = true
                         }
@@ -62,13 +69,54 @@ fun SpaceLearnNavHost(
             )
         }
 
-        composable(Screen.QuizResult.route) {
+        composable(
+            route = Screen.QuizResult.route,
+            arguments = listOf(
+                navArgument(
+                    Screen.QuizResult.SCORE_ARGUMENT
+                ) {
+                    type = NavType.IntType
+                },
+                navArgument(
+                    Screen.QuizResult.TOTAL_ARGUMENT
+                ) {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val score =
+                backStackEntry.arguments?.getInt(
+                    Screen.QuizResult.SCORE_ARGUMENT
+                ) ?: 0
+
+            val total =
+                backStackEntry.arguments?.getInt(
+                    Screen.QuizResult.TOTAL_ARGUMENT
+                ) ?: 0
+
             QuizResultScreen(
-                onBackHome = {
-                    navController.navigate(Screen.Home.route) {
+                score = score,
+                totalQuestions = total,
+                onTryAgain = {
+                    navController.navigate(
+                        Screen.QuizSetup.route
+                    ) {
                         popUpTo(Screen.Home.route) {
                             inclusive = false
                         }
+
+                        launchSingleTop = true
+                    }
+                },
+                onBackHome = {
+                    navController.navigate(
+                        Screen.Home.route
+                    ) {
+                        popUpTo(Screen.Home.route) {
+                            inclusive = false
+                        }
+
                         launchSingleTop = true
                     }
                 }
