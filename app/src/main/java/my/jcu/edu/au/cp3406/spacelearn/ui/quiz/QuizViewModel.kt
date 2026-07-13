@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import my.jcu.edu.au.cp3406.spacelearn.data.local.LocalQuestionBank
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
-class QuizViewModel : ViewModel() {
+class QuizViewModel(
+    private val quizRepository: QuizRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizUiState())
 
@@ -27,14 +29,8 @@ class QuizViewModel : ViewModel() {
             return
         }
 
-        val matchingQuestions =
-            LocalQuestionBank.questions.filter { question ->
-                question.topic == config.topic &&
-                        question.difficulty == config.difficulty
-            }
-
         val selectedQuestions =
-            matchingQuestions.take(config.questionCount)
+            quizRepository.getQuestions(config)
 
         val message = when {
             selectedQuestions.isEmpty() ->

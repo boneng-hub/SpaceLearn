@@ -13,11 +13,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import my.jcu.edu.au.cp3406.spacelearn.ui.navigation.SpaceLearnNavHost
 import my.jcu.edu.au.cp3406.spacelearn.ui.navigation.bottomDestinations
-
+import androidx.compose.runtime.remember
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
 @Composable
 fun SpaceLearnApp() {
     val navController = rememberNavController()
-
+    val quizRepository = remember {
+        LocalQuizRepository()
+    }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -60,6 +63,7 @@ fun SpaceLearnApp() {
     ) { innerPadding ->
         SpaceLearnNavHost(
             navController = navController,
+            quizRepository = quizRepository,
             modifier = Modifier.padding(innerPadding)
         )
     }

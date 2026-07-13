@@ -25,15 +25,27 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
+import androidx.compose.runtime.remember
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 @Composable
 fun QuizRoute(
     config: QuizConfig,
+    quizRepository: QuizRepository,
     onQuizComplete: (
         score: Int,
         totalQuestions: Int
-    ) -> Unit,
-    viewModel: QuizViewModel = viewModel()
+    ) -> Unit
 ) {
+    val factory = remember(quizRepository) {
+        QuizViewModelFactory(
+            quizRepository = quizRepository
+        )
+    }
+
+    val viewModel: QuizViewModel = viewModel(
+        factory = factory
+    )
+
     val uiState by
     viewModel.uiState.collectAsStateWithLifecycle()
 

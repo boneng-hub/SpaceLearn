@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
-
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
 class QuizViewModelTest {
 
     private lateinit var viewModel: QuizViewModel
@@ -22,7 +22,10 @@ class QuizViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = QuizViewModel()
+        viewModel = QuizViewModel(
+            quizRepository = LocalQuizRepository()
+        )
+
         viewModel.startQuiz(testConfig)
     }
 
