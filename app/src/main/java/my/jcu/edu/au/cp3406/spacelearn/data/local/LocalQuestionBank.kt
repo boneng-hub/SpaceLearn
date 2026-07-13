@@ -94,7 +94,7 @@ object LocalQuestionBank {
         QuizQuestion(
             id = 7,
             topic = QuizTopic.STARS_AND_GALAXIES,
-            difficulty = Difficulty.EASY,
+            difficulty = Difficulty.MEDIUM,
             questionText = "What is the Sun?",
             options = listOf(
                 "A planet",

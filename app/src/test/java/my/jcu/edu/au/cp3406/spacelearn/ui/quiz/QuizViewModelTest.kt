@@ -7,18 +7,23 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 
 class QuizViewModelTest {
 
     private lateinit var viewModel: QuizViewModel
 
+    private val testConfig = QuizConfig(
+        topic = QuizTopic.PLANETS,
+        difficulty = Difficulty.EASY,
+        questionCount = 3
+    )
+
     @Before
     fun setUp() {
         viewModel = QuizViewModel()
-
-        viewModel.startQuiz(
-            topic = QuizTopic.PLANETS
-        )
+        viewModel.startQuiz(testConfig)
     }
 
     @Test
@@ -91,5 +96,26 @@ class QuizViewModelTest {
             updatedState.currentQuestionIndex
         )
         assertNull(updatedState.selectedAnswerIndex)
+    }
+    @Test
+    fun startQuiz_filtersQuestionsByDifficulty() {
+        val state = viewModel.uiState.value
+
+        assertTrue(
+            state.questions.all { question ->
+                question.difficulty ==
+                        Difficulty.EASY
+            }
+        )
+    }
+
+    @Test
+    fun startQuiz_respectsRequestedQuestionCount() {
+        val state = viewModel.uiState.value
+
+        assertEquals(
+            testConfig.questionCount,
+            state.questions.size
+        )
     }
 }

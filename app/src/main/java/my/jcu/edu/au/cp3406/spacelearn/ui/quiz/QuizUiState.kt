@@ -1,13 +1,15 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.quiz
 
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizQuestion
-
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 data class QuizUiState(
+    val config: QuizConfig? = null,
     val questions: List<QuizQuestion> = emptyList(),
     val currentQuestionIndex: Int = 0,
     val selectedAnswerIndex: Int? = null,
     val score: Int = 0,
-    val isQuizComplete: Boolean = false
+    val isQuizComplete: Boolean = false,
+    val message: String? = null
 ) {
     val currentQuestion: QuizQuestion?
         get() = questions.getOrNull(currentQuestionIndex)
@@ -17,10 +19,14 @@ data class QuizUiState(
 
     val isCurrentAnswerCorrect: Boolean?
         get() {
-            val selectedIndex = selectedAnswerIndex ?: return null
-            val question = currentQuestion ?: return null
+            val selectedIndex =
+                selectedAnswerIndex ?: return null
 
-            return selectedIndex == question.correctAnswerIndex
+            val question =
+                currentQuestion ?: return null
+
+            return selectedIndex ==
+                    question.correctAnswerIndex
         }
 
     val progress: Float
@@ -29,6 +35,7 @@ data class QuizUiState(
                 return 0f
             }
 
-            return (currentQuestionIndex + 1).toFloat() / questions.size
+            return (currentQuestionIndex + 1).toFloat() /
+                    questions.size
         }
 }

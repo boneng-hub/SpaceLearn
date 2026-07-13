@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import my.jcu.edu.au.cp3406.spacelearn.data.local.LocalQuestionBank
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 class QuizViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizUiState())
@@ -16,19 +17,40 @@ class QuizViewModel : ViewModel() {
         _uiState.asStateFlow()
 
 
-    fun startQuiz(
-        topic: QuizTopic,
-        questionCount: Int = DEFAULT_QUESTION_COUNT
-    ) {
-        val quizQuestions = LocalQuestionBank.questions
-            .filter { question ->
-                question.topic == topic &&
-                        question.difficulty == Difficulty.EASY
+    fun startQuiz(config: QuizConfig) {
+        val currentState = _uiState.value
+
+        if (
+            currentState.config == config &&
+            currentState.questions.isNotEmpty()
+        ) {
+            return
+        }
+
+        val matchingQuestions =
+            LocalQuestionBank.questions.filter { question ->
+                question.topic == config.topic &&
+                        question.difficulty == config.difficulty
             }
-            .take(questionCount)
+
+        val selectedQuestions =
+            matchingQuestions.take(config.questionCount)
+
+        val message = when {
+            selectedQuestions.isEmpty() ->
+                "No questions are available for this quiz."
+
+            selectedQuestions.size < config.questionCount ->
+                "Only ${selectedQuestions.size} questions " +
+                        "are available for this selection."
+
+            else -> null
+        }
 
         _uiState.value = QuizUiState(
-            questions = quizQuestions
+            config = config,
+            questions = selectedQuestions,
+            message = message
         )
     }
 
@@ -92,13 +114,5 @@ class QuizViewModel : ViewModel() {
             )
         }
     }
-
-    fun restartQuiz(
-        topic: QuizTopic
-    ) {
-        startQuiz(topic)
-    }
-    private companion object {
-        const val DEFAULT_QUESTION_COUNT = 3
-    }
 }
+

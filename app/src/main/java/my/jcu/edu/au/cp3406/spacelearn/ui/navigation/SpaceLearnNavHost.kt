@@ -15,6 +15,9 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.statistics.StatisticsScreen
 import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
+
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
@@ -46,19 +49,24 @@ fun SpaceLearnNavHost(
 
         composable(Screen.QuizSetup.route) {
             QuizSetupScreen(
-                onStartQuiz = { selectedTopic ->
+                onStartQuiz = { config ->
                     navController.navigate(
-                        Screen.Quiz.createRoute(selectedTopic)
+                        Screen.Quiz.createRoute(config)
                     )
                 }
             )
         }
-
         composable(
             route = Screen.Quiz.route,
             arguments = listOf(
                 navArgument(Screen.Quiz.TOPIC_ARGUMENT) {
                     type = NavType.StringType
+                },
+                navArgument(Screen.Quiz.DIFFICULTY_ARGUMENT) {
+                    type = NavType.StringType
+                },
+                navArgument(Screen.Quiz.COUNT_ARGUMENT) {
+                    type = NavType.IntType
                 }
             )
         ) { backStackEntry ->
@@ -68,25 +76,49 @@ fun SpaceLearnNavHost(
                     Screen.Quiz.TOPIC_ARGUMENT
                 )
 
-            val selectedTopic =
-                 QuizTopic.entries.firstOrNull { topic ->
-                     topic.name == topicName
-                 } ?: QuizTopic.SOLAR_SYSTEM
+            val difficultyName =
+                backStackEntry.arguments?.getString(
+                    Screen.Quiz.DIFFICULTY_ARGUMENT
+                )
+
+            val requestedCount =
+                backStackEntry.arguments?.getInt(
+                    Screen.Quiz.COUNT_ARGUMENT
+                ) ?: 3
+
+            val topic =
+                QuizTopic.entries.firstOrNull {
+                    it.name == topicName
+                } ?: QuizTopic.SOLAR_SYSTEM
+
+            val difficulty =
+                Difficulty.entries.firstOrNull {
+                    it.name == difficultyName
+                } ?: Difficulty.EASY
+
+            val questionCount =
+                if (requestedCount == 5) 5 else 3
+
+            val config = QuizConfig(
+                topic = topic,
+                difficulty = difficulty,
+                questionCount = questionCount
+            )
 
             QuizRoute(
-                 topic = selectedTopic,
-                 onQuizComplete = { score, total ->
-                     navController.navigate(
-                         Screen.QuizResult.createRoute(
-                             score = score,
-                             total = total
-                         )
-                     ) {
-                         popUpTo(Screen.QuizSetup.route) {
-                             inclusive = true
-                         }
-                     }
-                 }
+                config = config,
+                onQuizComplete = { score, total ->
+                    navController.navigate(
+                        Screen.QuizResult.createRoute(
+                            score = score,
+                            total = total
+                        )
+                    ) {
+                        popUpTo(Screen.QuizSetup.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable(

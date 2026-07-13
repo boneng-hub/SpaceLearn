@@ -23,10 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 @Composable
 fun QuizRoute(
-    topic: QuizTopic,
+    config: QuizConfig,
     onQuizComplete: (
         score: Int,
         totalQuestions: Int
@@ -36,10 +37,8 @@ fun QuizRoute(
     val uiState by
     viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(topic) {
-        if (viewModel.uiState.value.questions.isEmpty()) {
-            viewModel.startQuiz(topic)
-        }
+    LaunchedEffect(config) {
+        viewModel.startQuiz(config)
     }
 
     LaunchedEffect(uiState.isQuizComplete) {
@@ -68,10 +67,15 @@ fun QuizScreen(
 
     if (question == null) {
         Box(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "No quiz questions are available.")
+            Text(
+                text = uiState.message
+                    ?: "No quiz questions are available."
+            )
         }
 
         return
@@ -87,6 +91,16 @@ fun QuizScreen(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        uiState.message?.let { message ->
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = message,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
         Text(
             text = question.topic.displayName,
             style = MaterialTheme.typography.titleMedium
