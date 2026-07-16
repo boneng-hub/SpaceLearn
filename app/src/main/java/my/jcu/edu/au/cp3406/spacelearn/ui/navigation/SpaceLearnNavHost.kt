@@ -17,11 +17,13 @@ import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
     quizRepository: QuizRepository,
+    progressRepository: ProgressRepository,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -109,6 +111,7 @@ fun SpaceLearnNavHost(
             QuizRoute(
                 config = config,
                 quizRepository = quizRepository,
+                progressRepository  = progressRepository,
                 onQuizComplete = { score, total ->
                     navController.navigate(
                         Screen.QuizResult.createRoute(

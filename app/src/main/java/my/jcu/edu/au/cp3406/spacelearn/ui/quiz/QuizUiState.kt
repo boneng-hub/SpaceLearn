@@ -3,6 +3,7 @@ package my.jcu.edu.au.cp3406.spacelearn.ui.quiz
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizQuestion
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 data class QuizUiState(
+    val isSavingResult: Boolean = false,
     val config: QuizConfig? = null,
     val questions: List<QuizQuestion> = emptyList(),
     val currentQuestionIndex: Int = 0,

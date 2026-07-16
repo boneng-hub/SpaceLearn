@@ -7,12 +7,20 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.theme.SpaceLearnTheme
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
         super.onCreate(savedInstanceState)
+
+        val appContainer =
+            (application as SpaceLearnApplication)
+                .appContainer
 
         setContent {
             SpaceLearnTheme {
-                SpaceLearnApp()
+                SpaceLearnApp(
+                    appContainer = appContainer
+                )
             }
         }
     }

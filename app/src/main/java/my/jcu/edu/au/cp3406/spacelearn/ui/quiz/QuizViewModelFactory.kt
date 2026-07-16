@@ -2,10 +2,12 @@ package my.jcu.edu.au.cp3406.spacelearn.ui.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 
 class QuizViewModelFactory(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
+    private val progressRepository: ProgressRepository
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -18,7 +20,8 @@ class QuizViewModelFactory(
             )
         ) {
             return QuizViewModel(
-                quizRepository = quizRepository
+                quizRepository = quizRepository,
+                progressRepository = progressRepository
             ) as T
         }
 

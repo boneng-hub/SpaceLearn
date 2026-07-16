@@ -26,19 +26,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import androidx.compose.runtime.remember
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 @Composable
 fun QuizRoute(
     config: QuizConfig,
     quizRepository: QuizRepository,
+    progressRepository: ProgressRepository,
     onQuizComplete: (
         score: Int,
         totalQuestions: Int
     ) -> Unit
 ) {
-    val factory = remember(quizRepository) {
+    val factory = remember(
+        quizRepository,
+        progressRepository
+    ) {
         QuizViewModelFactory(
-            quizRepository = quizRepository
+            quizRepository = quizRepository,
+            progressRepository =
+                progressRepository
         )
     }
 
@@ -177,10 +184,15 @@ fun QuizScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = if (isLastQuestion) {
-                        "Finish Quiz"
-                    } else {
-                        "Next Question"
+                    text = when {
+                        uiState.isSavingResult ->
+                            "Saving Result..."
+
+                        isLastQuestion ->
+                            "Finish Quiz"
+
+                        else ->
+                            "Next Question"
                     }
                 )
             }

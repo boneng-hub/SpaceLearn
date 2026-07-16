@@ -9,8 +9,14 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
+import java.security.Principal
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizResult
 class QuizViewModel(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
+    private val progressRepository: ProgressRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizUiState())
@@ -49,7 +55,42 @@ class QuizViewModel(
             message = message
         )
     }
+    private fun saveResultAndCompleteQuiz() {
+        val currentState = _uiState.value
+        val config = currentState.config ?: return
 
+        if (currentState.isSavingResult) {
+            return
+        }
+
+        _uiState.update { state ->
+            state.copy(
+                isSavingResult = true
+            )
+        }
+
+        viewModelScope.launch {
+            progressRepository.saveQuizResult(
+                QuizResult(
+                    topic = config.topic,
+                    difficulty = config.difficulty,
+                    totalQuestions =
+                        currentState.questions.size,
+                    correctAnswers =
+                        currentState.score,
+                    completedAt =
+                        System.currentTimeMillis()
+                )
+            )
+
+            _uiState.update { state ->
+                state.copy(
+                    isSavingResult = false,
+                    isQuizComplete = true
+                )
+            }
+        }
+    }
     fun selectAnswer(answerIndex: Int) {
         val currentState = _uiState.value
         val currentQuestion = currentState.currentQuestion ?: return
@@ -93,12 +134,7 @@ class QuizViewModel(
                     currentState.questions.lastIndex
 
         if (isLastQuestion) {
-            _uiState.update { state ->
-                state.copy(
-                    isQuizComplete = true
-                )
-            }
-
+            saveResultAndCompleteQuiz()
             return
         }
 
