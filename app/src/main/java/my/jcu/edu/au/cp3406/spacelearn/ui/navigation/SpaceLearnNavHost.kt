@@ -11,7 +11,6 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizResultScreen
-import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupScreen
 import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
@@ -20,6 +19,7 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsRoute
+import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupRoute
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
@@ -53,7 +53,9 @@ fun SpaceLearnNavHost(
         }
 
         composable(Screen.QuizSetup.route) {
-            QuizSetupScreen(
+            QuizSetupRoute(
+                settingsRepository =
+                    settingsRepository,
                 onStartQuiz = { config ->
                     navController.navigate(
                         Screen.Quiz.createRoute(config)
@@ -72,6 +74,9 @@ fun SpaceLearnNavHost(
                 },
                 navArgument(Screen.Quiz.COUNT_ARGUMENT) {
                     type = NavType.IntType
+                },
+                navArgument(Screen.Quiz.RANDOMISE_ARGUMENT) {
+                    type = NavType.BoolType
                 }
             )
         ) { backStackEntry ->
@@ -104,10 +109,16 @@ fun SpaceLearnNavHost(
             val questionCount =
                 if (requestedCount == 5) 5 else 3
 
+            val randomiseQuestions =
+                backStackEntry.arguments?.getBoolean(
+                    Screen.Quiz.RANDOMISE_ARGUMENT
+                ) ?: false
+
             val config = QuizConfig(
                 topic = topic,
                 difficulty = difficulty,
-                questionCount = questionCount
+                questionCount = questionCount,
+                randomiseQuestions = randomiseQuestions
             )
 
             QuizRoute(

@@ -12,17 +12,26 @@ sealed class Screen(val route: String) {
     data object QuizSetup : Screen("quiz_setup")
 
     data object Quiz :
-        Screen("quiz/{topic}/{difficulty}/{count}") {
+        Screen(
+            "quiz/{topic}/{difficulty}/" +
+                    "{count}/{randomise}"
+        ) {
 
         const val TOPIC_ARGUMENT = "topic"
-        const val DIFFICULTY_ARGUMENT = "difficulty"
+        const val DIFFICULTY_ARGUMENT =
+            "difficulty"
         const val COUNT_ARGUMENT = "count"
+        const val RANDOMISE_ARGUMENT =
+            "randomise"
 
-        fun createRoute(config: QuizConfig): String {
+        fun createRoute(
+            config: QuizConfig
+        ): String {
             return "quiz/" +
                     "${config.topic.name}/" +
                     "${config.difficulty.name}/" +
-                    config.questionCount
+                    "${config.questionCount}/" +
+                    config.randomiseQuestions
         }
     }
 

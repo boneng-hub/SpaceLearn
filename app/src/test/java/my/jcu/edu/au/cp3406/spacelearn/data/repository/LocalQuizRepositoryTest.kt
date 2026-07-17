@@ -1,5 +1,6 @@
 package my.jcu.edu.au.cp3406.spacelearn.data.repository
 
+import my.jcu.edu.au.cp3406.spacelearn.data.local.LocalQuestionBank
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
@@ -65,5 +66,68 @@ class LocalQuizRepositoryTest {
             repository.getQuestions(config)
 
         assertTrue(questions.size <= 3)
+    }
+
+    @Test
+    fun getQuestions_withRandomiseDisabled_keepsOriginalOrder() {
+        val config = QuizConfig(
+            topic = QuizTopic.PLANETS,
+            difficulty = Difficulty.EASY,
+            questionCount = 3,
+            randomiseQuestions = false
+        )
+
+        val questions =
+            repository.getQuestions(config)
+
+        val expectedIds =
+            LocalQuestionBank.questions
+                .filter { question ->
+                    question.topic ==
+                            QuizTopic.PLANETS &&
+                            question.difficulty ==
+                            Difficulty.EASY
+                }
+                .take(3)
+                .map { question ->
+                    question.id
+                }
+
+        val actualIds =
+            questions.map { question ->
+                question.id
+            }
+
+        assertEquals(
+            expectedIds,
+            actualIds
+        )
+    }
+
+    @Test
+    fun getQuestions_withRandomiseEnabled_returnsValidQuestions() {
+        val config = QuizConfig(
+            topic = QuizTopic.PLANETS,
+            difficulty = Difficulty.EASY,
+            questionCount = 3,
+            randomiseQuestions = true
+        )
+
+        val questions =
+            repository.getQuestions(config)
+
+        assertTrue(
+            questions.size <=
+                    config.questionCount
+        )
+
+        assertTrue(
+            questions.all { question ->
+                question.topic ==
+                        config.topic &&
+                        question.difficulty ==
+                        config.difficulty
+            }
+        )
     }
 }
