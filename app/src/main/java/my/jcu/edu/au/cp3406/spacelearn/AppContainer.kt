@@ -7,7 +7,8 @@ import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.data.repository.RoomProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
-
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.DataStoreSettingsRepository
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 class AppContainer(
     context: Context
 ) {
@@ -26,6 +27,10 @@ class AppContainer(
             quizResultDao = database.quizResultDao()
         )
 
+    val settingsRepository: SettingsRepository =
+        DataStoreSettingsRepository(
+            context = context.applicationContext
+        )
     private companion object {
         const val DATABASE_NAME =
             "spacelearn_database"

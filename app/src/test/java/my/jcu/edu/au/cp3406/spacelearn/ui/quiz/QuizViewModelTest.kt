@@ -1,15 +1,20 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.quiz
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
+import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizResult
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
-import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
-import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
+
 class QuizViewModelTest {
 
     private lateinit var viewModel: QuizViewModel
@@ -23,7 +28,8 @@ class QuizViewModelTest {
     @Before
     fun setUp() {
         viewModel = QuizViewModel(
-            quizRepository = LocalQuizRepository()
+            quizRepository = LocalQuizRepository(),
+            progressRepository = FakeProgressRepository()
         )
 
         viewModel.startQuiz(testConfig)
@@ -100,6 +106,7 @@ class QuizViewModelTest {
         )
         assertNull(updatedState.selectedAnswerIndex)
     }
+
     @Test
     fun startQuiz_filtersQuestionsByDifficulty() {
         val state = viewModel.uiState.value
@@ -120,5 +127,19 @@ class QuizViewModelTest {
             testConfig.questionCount,
             state.questions.size
         )
+    }
+}
+
+private class FakeProgressRepository : ProgressRepository {
+    override suspend fun saveQuizResult(result: QuizResult) {
+        // No-op for unit tests that do not assert persistence.
+    }
+
+    override fun observeQuizResults(): Flow<List<QuizResult>> {
+        return flowOf(emptyList())
+    }
+
+    override suspend fun clearQuizResults() {
+        // No-op for tests.
     }
 }

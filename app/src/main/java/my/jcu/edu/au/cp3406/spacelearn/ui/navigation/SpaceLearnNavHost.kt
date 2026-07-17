@@ -1,5 +1,6 @@
 package my.jcu.edu.au.cp3406.spacelearn.ui.navigation
 
+import my.jcu.edu.au.cp3406.spacelearn.ui.statistics.StatisticsRoute
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -11,19 +12,20 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizResultScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupScreen
-import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsScreen
-import my.jcu.edu.au.cp3406.spacelearn.ui.statistics.StatisticsScreen
 import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsRoute
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
     quizRepository: QuizRepository,
     progressRepository: ProgressRepository,
+    settingsRepository: SettingsRepository,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -181,11 +183,18 @@ fun SpaceLearnNavHost(
         }
 
         composable(Screen.Statistics.route) {
-            StatisticsScreen()
+            StatisticsRoute(
+                progressRepository = progressRepository
+            )
         }
 
         composable(Screen.Settings.route) {
-            SettingsScreen()
+            SettingsRoute(
+                settingsRepository =
+                    settingsRepository,
+                progressRepository =
+                    progressRepository
+            )
         }
     }
 }

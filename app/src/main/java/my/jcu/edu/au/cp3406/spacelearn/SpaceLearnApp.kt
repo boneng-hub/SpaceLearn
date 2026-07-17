@@ -63,6 +63,7 @@ fun SpaceLearnApp(
             navController = navController,
             quizRepository = appContainer.quizRepository,
             progressRepository = appContainer.progressRepository,
+            settingsRepository = appContainer.settingsRepository,
             modifier = Modifier.padding(innerPadding)
         )
     }
