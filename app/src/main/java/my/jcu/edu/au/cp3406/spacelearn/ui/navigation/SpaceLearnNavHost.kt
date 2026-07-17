@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailScreen
-import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeScreen
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizResultScreen
 import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
@@ -20,12 +19,15 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 import my.jcu.edu.au.cp3406.spacelearn.ui.settings.SettingsRoute
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizSetupRoute
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
+import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeRoute
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
     quizRepository: QuizRepository,
     progressRepository: ProgressRepository,
     settingsRepository: SettingsRepository,
+    astronomyRepository: AstronomyRepository,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -34,12 +36,18 @@ fun SpaceLearnNavHost(
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeScreen(
+            HomeRoute(
+                astronomyRepository =
+                    astronomyRepository,
                 onStartQuiz = {
-                    navController.navigate(Screen.QuizSetup.route)
+                    navController.navigate(
+                        Screen.QuizSetup.route
+                    )
                 },
                 onOpenDailyContent = {
-                    navController.navigate(Screen.DailyDetail.route)
+                    navController.navigate(
+                        Screen.DailyDetail.route
+                    )
                 }
             )
         }

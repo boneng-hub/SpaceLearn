@@ -9,6 +9,11 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.data.repository.DataStoreSettingsRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import my.jcu.edu.au.cp3406.spacelearn.data.remote.NasaApodApi
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.NetworkAstronomyRepository
+import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 class AppContainer(
     context: Context
 ) {
@@ -31,8 +36,30 @@ class AppContainer(
         DataStoreSettingsRepository(
             context = context.applicationContext
         )
+
+    private val retrofit: Retrofit =
+        Retrofit.Builder()
+            .baseUrl(NASA_BASE_URL)
+            .addConverterFactory(
+                GsonConverterFactory.create()
+            )
+            .build()
+
+    private val nasaApodApi: NasaApodApi =
+        retrofit.create(
+            NasaApodApi::class.java
+        )
+
+    val astronomyRepository: AstronomyRepository =
+        NetworkAstronomyRepository(
+            nasaApodApi = nasaApodApi,
+            apiKey = BuildConfig.NASA_API_KEY
+        )
+
     private companion object {
         const val DATABASE_NAME =
             "spacelearn_database"
+        private const val NASA_BASE_URL =
+            "https://api.nasa.gov/"
     }
 }

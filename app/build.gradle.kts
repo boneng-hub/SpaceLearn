@@ -1,16 +1,33 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
+val localProperties = Properties().apply {
+    val localPropertiesFile =
+        rootProject.file("local.properties")
+
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile
+            .inputStream()
+            .use { inputStream ->
+                load(inputStream)
+            }
+    }
+}
+
+val nasaApiKey =
+    localProperties.getProperty(
+        "NASA_API_KEY",
+        "DEMO_KEY"
+    )
+
 
 android {
     namespace = "my.jcu.edu.au.cp3406.spacelearn"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "my.jcu.edu.au.cp3406.spacelearn"
@@ -20,6 +37,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            type = "String",
+            name = "NASA_API_KEY",
+            value = "\"$nasaApiKey\""
+        )
     }
 
     buildTypes {
@@ -32,11 +55,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -61,4 +85,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

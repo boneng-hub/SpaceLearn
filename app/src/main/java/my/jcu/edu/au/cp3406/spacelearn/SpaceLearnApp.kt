@@ -64,6 +64,7 @@ fun SpaceLearnApp(
             quizRepository = appContainer.quizRepository,
             progressRepository = appContainer.progressRepository,
             settingsRepository = appContainer.settingsRepository,
+            astronomyRepository = appContainer.astronomyRepository,
             modifier = Modifier.padding(innerPadding)
         )
     }
