@@ -2,6 +2,7 @@ package my.jcu.edu.au.cp3406.spacelearn
 
 import android.content.Context
 import androidx.room.Room
+import my.jcu.edu.au.cp3406.spacelearn.data.local.MIGRATION_1_2
 import my.jcu.edu.au.cp3406.spacelearn.data.local.SpaceLearnDatabase
 import my.jcu.edu.au.cp3406.spacelearn.data.repository.LocalQuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.data.repository.RoomProgressRepository
@@ -10,7 +11,7 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import my.jcu.edu.au.cp3406.spacelearn.data.repository.DataStoreSettingsRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 import my.jcu.edu.au.cp3406.spacelearn.data.remote.NasaApodApi
-import my.jcu.edu.au.cp3406.spacelearn.data.repository.NetworkAstronomyRepository
+import my.jcu.edu.au.cp3406.spacelearn.data.repository.DefaultAstronomyRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,7 +23,9 @@ class AppContainer(
             context.applicationContext,
             SpaceLearnDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     val quizRepository: QuizRepository =
         LocalQuizRepository()
@@ -51,8 +54,9 @@ class AppContainer(
         )
 
     val astronomyRepository: AstronomyRepository =
-        NetworkAstronomyRepository(
+        DefaultAstronomyRepository(
             nasaApodApi = nasaApodApi,
+            astronomyContentDao = database.astronomyContentDao(),
             apiKey = BuildConfig.NASA_API_KEY
         )
 

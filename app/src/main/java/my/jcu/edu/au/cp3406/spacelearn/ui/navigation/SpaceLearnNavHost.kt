@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
-import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailScreen
+import my.jcu.edu.au.cp3406.spacelearn.ui.daily.DailyDetailRoute
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizResultScreen
 import androidx.navigation.NavType
 import my.jcu.edu.au.cp3406.spacelearn.ui.quiz.QuizRoute
@@ -53,7 +53,9 @@ fun SpaceLearnNavHost(
         }
 
         composable(Screen.DailyDetail.route) {
-            DailyDetailScreen(
+            DailyDetailRoute(
+                astronomyRepository =
+                    astronomyRepository,
                 onBack = {
                     navController.popBackStack()
                 }

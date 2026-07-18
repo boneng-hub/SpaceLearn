@@ -21,36 +21,68 @@ class HomeViewModel(
         _uiState.asStateFlow()
 
     init {
-        loadDailyContent()
+        observeCachedContent()
+        refreshDailyContent()
     }
 
-    fun loadDailyContent() {
-        if (_uiState.value.isLoading) {
+    private fun observeCachedContent() {
+        viewModelScope.launch {
+            astronomyRepository
+                .observeLatestContent()
+                .collect { content ->
+
+                    if (content != null) {
+                        _uiState.update { state ->
+                            state.copy(
+                                dailyContent = content,
+                                isLoading = false
+                            )
+                        }
+                    }
+                }
+        }
+    }
+
+    fun refreshDailyContent() {
+        if (_uiState.value.isRefreshing) {
             return
         }
 
         _uiState.update { state ->
             state.copy(
-                isLoading = true,
+                isLoading =
+                    state.dailyContent == null,
+                isRefreshing = true,
+                isUsingCachedContent = false,
                 errorMessage = null
             )
         }
 
         viewModelScope.launch {
-            runCatching {
+            try {
                 astronomyRepository
-                    .getDailyContent()
-            }.onSuccess { content ->
-                _uiState.value = HomeUiState(
-                    dailyContent = content,
-                    isLoading = false
-                )
-            }.onFailure {
+                    .refreshDailyContent()
+            } catch (_: Exception) {
+                _uiState.update { state ->
+                    val hasCachedContent =
+                        state.dailyContent != null
+
+                    state.copy(
+                        isUsingCachedContent =
+                            hasCachedContent,
+                        errorMessage =
+                            if (hasCachedContent) {
+                                "Unable to refresh. Showing the most recently saved discovery."
+                            } else {
+                                "Unable to load today's discovery. Check your connection and try again."
+                            }
+                    )
+                }
+            } finally {
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
-                        errorMessage =
-                            "Unable to load today's space discovery. Check your connection and try again."
+                        isRefreshing = false
                     )
                 }
             }

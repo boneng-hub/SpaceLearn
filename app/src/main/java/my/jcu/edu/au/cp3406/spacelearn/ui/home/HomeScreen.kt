@@ -49,7 +49,7 @@ fun HomeRoute(
 
     HomeScreen(
         uiState = uiState,
-        onRetry = viewModel::loadDailyContent,
+        onRetry = viewModel::refreshDailyContent,
         onStartQuiz = onStartQuiz,
         onOpenDailyContent =
             onOpenDailyContent,
@@ -104,35 +104,51 @@ fun HomeScreen(
 
         item {
             when {
-                uiState.isLoading -> {
+                uiState.isLoading &&
+                        uiState.dailyContent == null -> {
+
                     LoadingDailyContent()
+                }
+
+                uiState.dailyContent != null -> {
+                    Column(
+                        verticalArrangement =
+                            Arrangement.spacedBy(12.dp)
+                    ) {
+                        uiState.errorMessage?.let { message ->
+                            Card(
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = message,
+                                    modifier =
+                                        Modifier.padding(16.dp)
+                                )
+                            }
+                        }
+
+                        DailyContentCard(
+                            title =
+                                uiState.dailyContent.title,
+                            date =
+                                uiState.dailyContent.date,
+                            explanation =
+                                uiState.dailyContent.explanation,
+                            imageUrl =
+                                uiState.dailyContent.imageUrl,
+                            source =
+                                uiState.dailyContent.sourceLabel,
+                            onOpen =
+                                onOpenDailyContent
+                        )
+                    }
                 }
 
                 uiState.errorMessage != null -> {
                     DailyContentError(
-                        message =
-                            uiState.errorMessage,
+                        message = uiState.errorMessage,
                         onRetry = onRetry
-                    )
-                }
-
-                uiState.dailyContent != null -> {
-                    DailyContentCard(
-                        title =
-                            uiState.dailyContent.title,
-                        date =
-                            uiState.dailyContent.date,
-                        explanation =
-                            uiState.dailyContent
-                                .explanation,
-                        imageUrl =
-                            uiState.dailyContent
-                                .imageUrl,
-                        source =
-                            uiState.dailyContent
-                                .sourceLabel,
-                        onOpen =
-                            onOpenDailyContent
                     )
                 }
             }
