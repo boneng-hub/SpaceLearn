@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android.plugin)
 }
 val localProperties = Properties().apply {
     val localPropertiesFile =
@@ -64,6 +65,10 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -89,4 +94,7 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.hilt.android.lib)
+    ksp(libs.hilt.compiler.lib)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 }

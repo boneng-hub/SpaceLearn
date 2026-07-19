@@ -14,6 +14,8 @@ room = "2.8.4"
 datastore = "1.2.1"
 retrofit = "3.0.0"
 coil = "3.3.0"
+hiltVersion = "2.57.1"
+androidxHilt = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,8 +43,13 @@ retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", ve
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 
+hilt-android-lib = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
+hilt-compiler-lib = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+androidx-hilt-lifecycle-viewmodel-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "androidxHilt" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+hilt-android-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }

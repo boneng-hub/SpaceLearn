@@ -8,11 +8,15 @@ import my.jcu.edu.au.cp3406.spacelearn.data.remote.NasaApodApi
 import my.jcu.edu.au.cp3406.spacelearn.data.remote.dto.ApodDto
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.AstronomyContent
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
+import javax.inject.Inject
+import javax.inject.Named
+import my.jcu.edu.au.cp3406.spacelearn.di.NetworkModule
 
-class DefaultAstronomyRepository(
+class DefaultAstronomyRepository @Inject constructor(
     private val nasaApodApi: NasaApodApi,
     private val astronomyContentDao:
     AstronomyContentDao,
+    @Named(NetworkModule.NASA_API_KEY_NAME)
     private val apiKey: String
 ) : AstronomyRepository {
 

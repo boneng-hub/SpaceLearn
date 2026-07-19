@@ -14,8 +14,11 @@ import my.jcu.edu.au.cp3406.spacelearn.data.preferences.settingsDataStore
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.AppSettings
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class DataStoreSettingsRepository(
+class DataStoreSettingsRepository @Inject constructor(
+    @ApplicationContext
     private val context: Context
 ) : SettingsRepository {
 

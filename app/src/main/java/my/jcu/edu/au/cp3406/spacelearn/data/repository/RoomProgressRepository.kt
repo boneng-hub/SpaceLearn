@@ -8,8 +8,9 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizResult
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
+import javax.inject.Inject
 
-class RoomProgressRepository(
+class RoomProgressRepository @Inject constructor(
     private val quizResultDao: QuizResultDao
 ) : ProgressRepository {
 

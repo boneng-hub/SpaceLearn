@@ -4,8 +4,9 @@ import my.jcu.edu.au.cp3406.spacelearn.data.local.LocalQuestionBank
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizQuestion
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
-
-class LocalQuizRepository : QuizRepository {
+import javax.inject.Inject
+class LocalQuizRepository @Inject constructor() :
+    QuizRepository {
 
     override fun getQuestions(
         config: QuizConfig
