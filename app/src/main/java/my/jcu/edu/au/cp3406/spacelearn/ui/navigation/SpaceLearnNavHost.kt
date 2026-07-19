@@ -24,10 +24,6 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.home.HomeRoute
 @Composable
 fun SpaceLearnNavHost(
     navController: NavHostController,
-    quizRepository: QuizRepository,
-    progressRepository: ProgressRepository,
-    settingsRepository: SettingsRepository,
-    astronomyRepository: AstronomyRepository,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -37,8 +33,6 @@ fun SpaceLearnNavHost(
     ) {
         composable(Screen.Home.route) {
             HomeRoute(
-                astronomyRepository =
-                    astronomyRepository,
                 onStartQuiz = {
                     navController.navigate(
                         Screen.QuizSetup.route
@@ -54,8 +48,6 @@ fun SpaceLearnNavHost(
 
         composable(Screen.DailyDetail.route) {
             DailyDetailRoute(
-                astronomyRepository =
-                    astronomyRepository,
                 onBack = {
                     navController.popBackStack()
                 }
@@ -64,8 +56,6 @@ fun SpaceLearnNavHost(
 
         composable(Screen.QuizSetup.route) {
             QuizSetupRoute(
-                settingsRepository =
-                    settingsRepository,
                 onStartQuiz = { config ->
                     navController.navigate(
                         Screen.Quiz.createRoute(config)
@@ -133,8 +123,6 @@ fun SpaceLearnNavHost(
 
             QuizRoute(
                 config = config,
-                quizRepository = quizRepository,
-                progressRepository  = progressRepository,
                 onQuizComplete = { score, total ->
                     navController.navigate(
                         Screen.QuizResult.createRoute(
@@ -142,7 +130,7 @@ fun SpaceLearnNavHost(
                             total = total
                         )
                     ) {
-                        popUpTo(Screen.QuizSetup.route) {
+                        popUpTo(Screen.Quiz.route) {
                             inclusive = true
                         }
                     }
@@ -204,18 +192,11 @@ fun SpaceLearnNavHost(
         }
 
         composable(Screen.Statistics.route) {
-            StatisticsRoute(
-                progressRepository = progressRepository
-            )
+            StatisticsRoute()
         }
 
         composable(Screen.Settings.route) {
-            SettingsRoute(
-                settingsRepository =
-                    settingsRepository,
-                progressRepository =
-                    progressRepository
-            )
+            SettingsRoute()
         }
     }
 }

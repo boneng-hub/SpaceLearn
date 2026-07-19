@@ -8,11 +8,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val astronomyRepository:
     AstronomyRepository
-) : ViewModel() {
+) : ViewModel(){
 
     private val _uiState =
         MutableStateFlow(HomeUiState())

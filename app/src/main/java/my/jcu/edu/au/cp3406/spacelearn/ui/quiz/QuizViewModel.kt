@@ -14,10 +14,16 @@ import java.security.Principal
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizResult
-class QuizViewModel(
-    private val quizRepository: QuizRepository,
-    private val progressRepository: ProgressRepository
-) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class QuizViewModel @Inject constructor(
+    private val quizRepository:
+    QuizRepository,
+    private val progressRepository:
+    ProgressRepository
+) : ViewModel(){
 
     private val _uiState = MutableStateFlow(QuizUiState())
 

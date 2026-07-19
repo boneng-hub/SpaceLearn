@@ -15,9 +15,7 @@ import my.jcu.edu.au.cp3406.spacelearn.ui.navigation.SpaceLearnNavHost
 import my.jcu.edu.au.cp3406.spacelearn.ui.navigation.bottomDestinations
 
 @Composable
-fun SpaceLearnApp(
-    appContainer: AppContainer
-) {
+fun SpaceLearnApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -61,11 +59,8 @@ fun SpaceLearnApp(
     ) { innerPadding ->
         SpaceLearnNavHost(
             navController = navController,
-            quizRepository = appContainer.quizRepository,
-            progressRepository = appContainer.progressRepository,
-            settingsRepository = appContainer.settingsRepository,
-            astronomyRepository = appContainer.astronomyRepository,
-            modifier = Modifier.padding(innerPadding)
+            modifier =
+                Modifier.padding(innerPadding)
         )
     }
 }

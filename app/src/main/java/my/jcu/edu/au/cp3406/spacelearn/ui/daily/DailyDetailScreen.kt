@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
@@ -26,19 +27,11 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
 
 @Composable
 fun DailyDetailRoute(
-    astronomyRepository: AstronomyRepository,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val factory = remember(astronomyRepository) {
-        DailyDetailViewModelFactory(
-            astronomyRepository =
-                astronomyRepository
-        )
-    }
-
     val viewModel: DailyDetailViewModel =
-        viewModel(factory = factory)
+        hiltViewModel()
 
     val uiState by
     viewModel.uiState

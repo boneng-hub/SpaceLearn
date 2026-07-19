@@ -22,26 +22,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import my.jcu.edu.au.cp3406.spacelearn.domain.repository.AstronomyRepository
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun HomeRoute(
-    astronomyRepository: AstronomyRepository,
     onStartQuiz: () -> Unit,
     onOpenDailyContent: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val factory = remember(astronomyRepository) {
-        HomeViewModelFactory(
-            astronomyRepository =
-                astronomyRepository
-        )
-    }
-
     val viewModel: HomeViewModel =
-        viewModel(factory = factory)
+        hiltViewModel()
 
     val uiState by
     viewModel.uiState
@@ -49,14 +40,14 @@ fun HomeRoute(
 
     HomeScreen(
         uiState = uiState,
-        onRetry = viewModel::refreshDailyContent,
+        onRetry =
+            viewModel::refreshDailyContent,
         onStartQuiz = onStartQuiz,
         onOpenDailyContent =
             onOpenDailyContent,
         modifier = modifier
     )
 }
-
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,

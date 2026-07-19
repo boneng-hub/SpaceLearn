@@ -11,10 +11,14 @@ import kotlinx.coroutines.launch
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class QuizSetupViewModel(
-    private val settingsRepository: SettingsRepository
-) : ViewModel() {
+@HiltViewModel
+class QuizSetupViewModel @Inject constructor(
+    private val settingsRepository:
+    SettingsRepository
+) : ViewModel(){
 
     private val _uiState =
         MutableStateFlow(QuizSetupUiState())

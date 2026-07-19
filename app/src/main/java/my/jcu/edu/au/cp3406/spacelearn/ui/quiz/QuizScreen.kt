@@ -26,41 +26,32 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import androidx.compose.runtime.remember
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 @Composable
 fun QuizRoute(
     config: QuizConfig,
-    quizRepository: QuizRepository,
-    progressRepository: ProgressRepository,
     onQuizComplete: (
         score: Int,
         totalQuestions: Int
-    ) -> Unit
+    ) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val factory = remember(
-        quizRepository,
-        progressRepository
-    ) {
-        QuizViewModelFactory(
-            quizRepository = quizRepository,
-            progressRepository =
-                progressRepository
-        )
-    }
-
-    val viewModel: QuizViewModel = viewModel(
-        factory = factory
-    )
+    val viewModel: QuizViewModel =
+        hiltViewModel()
 
     val uiState by
-    viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.uiState
+        .collectAsStateWithLifecycle()
 
     LaunchedEffect(config) {
         viewModel.startQuiz(config)
     }
 
-    LaunchedEffect(uiState.isQuizComplete) {
+    LaunchedEffect(
+        uiState.isQuizComplete
+    ) {
         if (uiState.isQuizComplete) {
             onQuizComplete(
                 uiState.score,
@@ -71,8 +62,11 @@ fun QuizRoute(
 
     QuizScreen(
         uiState = uiState,
-        onAnswerSelected = viewModel::selectAnswer,
-        onNextQuestion = viewModel::moveToNextQuestion
+        onAnswerSelected =
+            viewModel::selectAnswer,
+        onNextQuestion =
+            viewModel::moveToNextQuestion,
+        modifier = modifier
     )
 }
 @Composable

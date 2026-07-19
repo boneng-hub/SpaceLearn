@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
@@ -34,28 +35,14 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 
 @Composable
 fun SettingsRoute(
-    settingsRepository: SettingsRepository,
-    progressRepository: ProgressRepository,
     modifier: Modifier = Modifier
 ) {
-    val factory = remember(
-        settingsRepository,
-        progressRepository
-    ) {
-        SettingsViewModelFactory(
-            settingsRepository =
-                settingsRepository,
-            progressRepository =
-                progressRepository
-        )
-    }
-
-    val viewModel: SettingsViewModel = viewModel(
-        factory = factory
-    )
+    val viewModel: SettingsViewModel =
+        hiltViewModel()
 
     val uiState by
-    viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.uiState
+        .collectAsStateWithLifecycle()
 
     SettingsScreen(
         uiState = uiState,

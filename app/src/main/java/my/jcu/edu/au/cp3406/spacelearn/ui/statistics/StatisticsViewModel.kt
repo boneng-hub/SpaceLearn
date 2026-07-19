@@ -9,11 +9,14 @@ import kotlinx.coroutines.flow.stateIn
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizResult
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class StatisticsViewModel(
+@HiltViewModel
+class StatisticsViewModel @Inject constructor(
     progressRepository: ProgressRepository
-) : ViewModel() {
-
+) : ViewModel()
+{
     val uiState: StateFlow<StatisticsUiState> =
         progressRepository
             .observeQuizResults()

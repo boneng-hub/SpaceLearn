@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.SimpleDateFormat
@@ -31,21 +32,14 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 
 @Composable
 fun StatisticsRoute(
-    progressRepository: ProgressRepository,
     modifier: Modifier = Modifier
 ) {
-    val factory = remember(progressRepository) {
-        StatisticsViewModelFactory(
-            progressRepository = progressRepository
-        )
-    }
-
-    val viewModel: StatisticsViewModel = viewModel(
-        factory = factory
-    )
+    val viewModel: StatisticsViewModel =
+        hiltViewModel()
 
     val uiState by
-    viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.uiState
+        .collectAsStateWithLifecycle()
 
     StatisticsScreen(
         uiState = uiState,

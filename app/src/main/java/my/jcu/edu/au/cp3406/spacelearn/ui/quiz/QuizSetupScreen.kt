@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
@@ -29,19 +30,11 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 
 @Composable
 fun QuizSetupRoute(
-    settingsRepository: SettingsRepository,
     onStartQuiz: (QuizConfig) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val factory = remember(settingsRepository) {
-        QuizSetupViewModelFactory(
-            settingsRepository =
-                settingsRepository
-        )
-    }
-
     val viewModel: QuizSetupViewModel =
-        viewModel(factory = factory)
+        hiltViewModel()
 
     val uiState by
     viewModel.uiState
@@ -65,7 +58,6 @@ fun QuizSetupRoute(
         modifier = modifier
     )
 }
-
 @Composable
 fun QuizSetupScreen(
     uiState: QuizSetupUiState,

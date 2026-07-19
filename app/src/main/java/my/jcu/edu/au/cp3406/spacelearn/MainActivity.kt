@@ -14,15 +14,10 @@ class MainActivity : ComponentActivity() {
     ) {
         super.onCreate(savedInstanceState)
 
-        val appContainer =
-            (application as SpaceLearnApplication)
-                .appContainer
 
         setContent {
             SpaceLearnTheme {
-                SpaceLearnApp(
-                    appContainer = appContainer
-                )
+                SpaceLearnApp()
             }
         }
     }

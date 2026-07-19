@@ -2,6 +2,7 @@ package my.jcu.edu.au.cp3406.spacelearn.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,10 +13,15 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 
-class SettingsViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val progressRepository: ProgressRepository
-) : ViewModel() {
+import javax.inject.Inject
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val settingsRepository:
+    SettingsRepository,
+    private val progressRepository:
+    ProgressRepository
+) : ViewModel(){
 
     private val isClearingHistory =
         MutableStateFlow(false)
