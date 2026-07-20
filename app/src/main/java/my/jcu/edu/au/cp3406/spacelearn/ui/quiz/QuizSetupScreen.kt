@@ -27,6 +27,7 @@ import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun QuizSetupRoute(
@@ -93,6 +94,9 @@ fun QuizSetupScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
+            .testTag(
+                QuizSetupTestTags.SCREEN_LIST
+            )
             .padding(horizontal = 20.dp),
         verticalArrangement =
             Arrangement.spacedBy(16.dp)
@@ -124,8 +128,7 @@ fun QuizSetupScreen(
             item {
                 FilterChip(
                     selected =
-                        uiState.selectedTopic ==
-                                topic,
+                        uiState.selectedTopic == topic,
                     onClick = {
                         onTopicSelected(topic)
                     },
@@ -134,8 +137,11 @@ fun QuizSetupScreen(
                             text = topic.displayName
                         )
                     },
-                    modifier =
-                        Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(
+                            QuizSetupTestTags.topic(topic)
+                        )
                 )
             }
         }
@@ -161,8 +167,7 @@ fun QuizSetupScreen(
                 ).forEach { difficulty ->
                     FilterChip(
                         selected =
-                            uiState
-                                .selectedDifficulty ==
+                            uiState.selectedDifficulty ==
                                     difficulty,
                         onClick = {
                             onDifficultySelected(
@@ -172,10 +177,14 @@ fun QuizSetupScreen(
                         label = {
                             Text(
                                 text =
-                                    difficulty
-                                        .displayName
+                                    difficulty.displayName
                             )
-                        }
+                        },
+                        modifier = Modifier.testTag(
+                            QuizSetupTestTags.difficulty(
+                                difficulty
+                            )
+                        )
                     )
                 }
             }
@@ -199,20 +208,21 @@ fun QuizSetupScreen(
                 listOf(3, 5).forEach { count ->
                     FilterChip(
                         selected =
-                            uiState
-                                .selectedQuestionCount ==
+                            uiState.selectedQuestionCount ==
                                     count,
                         onClick = {
-                            onQuestionCountSelected(
-                                count
-                            )
+                            onQuestionCountSelected(count)
                         },
                         label = {
                             Text(
-                                text =
-                                    count.toString()
+                                text = count.toString()
                             )
-                        }
+                        },
+                        modifier = Modifier.testTag(
+                            QuizSetupTestTags.questionCount(
+                                count
+                            )
+                        )
                     )
                 }
             }
@@ -252,7 +262,11 @@ fun QuizSetupScreen(
                     checked =
                         uiState.randomiseQuestions,
                     onCheckedChange =
-                        onRandomiseChanged
+                        onRandomiseChanged,
+                    modifier = Modifier.testTag(
+                        QuizSetupTestTags
+                            .RANDOMISE_SWITCH
+                    )
                 )
             }
         }
@@ -262,6 +276,9 @@ fun QuizSetupScreen(
                 onClick = onStartQuiz,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag(
+                        QuizSetupTestTags.BEGIN_BUTTON
+                    )
                     .padding(bottom = 24.dp)
             ) {
                 Text(text = "Begin Quiz")
