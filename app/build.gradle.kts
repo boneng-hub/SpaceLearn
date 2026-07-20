@@ -97,4 +97,5 @@ dependencies {
     implementation(libs.hilt.android.lib)
     ksp(libs.hilt.compiler.lib)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
