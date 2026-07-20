@@ -32,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun SettingsRoute(
@@ -76,6 +77,8 @@ fun SettingsScreen(
             onDismissRequest = {
                 showClearHistoryDialog = false
             },
+            modifier = Modifier.testTag(
+                SettingsScreenTestTags.CLEAR_DIALOG),
             title = {
                 Text(text = "Clear quiz history?")
             },
@@ -89,7 +92,11 @@ fun SettingsScreen(
                     onClick = {
                         showClearHistoryDialog = false
                         onClearHistory()
-                    }
+                    },
+                    modifier = Modifier.testTag(
+                        SettingsScreenTestTags
+                            .CLEAR_DIALOG_CONFIRM
+                    )
                 ) {
                     Text(text = "Clear")
                 }
@@ -98,7 +105,11 @@ fun SettingsScreen(
                 TextButton(
                     onClick = {
                         showClearHistoryDialog = false
-                    }
+                    },
+                    modifier = Modifier.testTag(
+                        SettingsScreenTestTags
+                            .CLEAR_DIALOG_CANCEL
+                    )
                 ) {
                     Text(text = "Cancel")
                 }
@@ -123,6 +134,7 @@ fun SettingsScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
+            .testTag(SettingsScreenTestTags.SCREEN_LIST)
             .padding(horizontal = 20.dp),
         verticalArrangement =
             Arrangement.spacedBy(16.dp)
@@ -178,7 +190,11 @@ fun SettingsScreen(
                                 text =
                                     difficulty.displayName
                             )
-                        }
+                        },
+                        modifier = Modifier.testTag(
+                            SettingsScreenTestTags
+                                .difficulty(difficulty)
+                        )
                     )
                 }
             }
@@ -208,7 +224,11 @@ fun SettingsScreen(
                         },
                         label = {
                             Text(text = count.toString())
-                        }
+                        },
+                        modifier = Modifier.testTag(
+                            SettingsScreenTestTags
+                                .questionCount(count)
+                        )
                     )
                 }
             }
@@ -244,7 +264,11 @@ fun SettingsScreen(
                         uiState.settings
                             .randomiseQuestions,
                     onCheckedChange =
-                        onRandomiseChanged
+                        onRandomiseChanged,
+                    modifier = Modifier.testTag(
+                        SettingsScreenTestTags
+                            .RANDOMISE_SWITCH
+                    )
                 )
             }
         }
@@ -270,6 +294,10 @@ fun SettingsScreen(
                 enabled =
                     !uiState.isClearingHistory,
                 modifier = Modifier.fillMaxWidth()
+                    .testTag(
+                        SettingsScreenTestTags
+                            .CLEAR_HISTORY_BUTTON
+                    )
             ) {
                 Text(
                     text =
