@@ -22,13 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizConfig
-import my.jcu.edu.au.cp3406.spacelearn.domain.model.QuizTopic
-import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
-import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
 import androidx.compose.ui.platform.testTag
 
 @Composable

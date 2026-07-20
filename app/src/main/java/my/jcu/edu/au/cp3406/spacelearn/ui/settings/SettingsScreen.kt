@@ -28,10 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.model.Difficulty
-import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
-import my.jcu.edu.au.cp3406.spacelearn.domain.repository.SettingsRepository
 import androidx.compose.ui.platform.testTag
 
 @Composable
