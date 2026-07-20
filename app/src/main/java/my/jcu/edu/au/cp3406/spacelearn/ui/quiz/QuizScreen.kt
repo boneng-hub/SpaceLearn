@@ -29,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.ProgressRepository
 import my.jcu.edu.au.cp3406.spacelearn.domain.repository.QuizRepository
+import androidx.compose.ui.platform.testTag
+
 @Composable
 fun QuizRoute(
     config: QuizConfig,
@@ -100,6 +102,7 @@ fun QuizScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .testTag("QuizScreenTestTags.SCREEN")
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -122,6 +125,9 @@ fun QuizScreen(
         Text(
             text = "Question ${uiState.currentQuestionIndex + 1} " +
                     "of ${uiState.questions.size}",
+            modifier = Modifier.testTag(
+                QuizScreenTestTags.PROGRESS
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -133,7 +139,10 @@ fun QuizScreen(
         Text(
             text = question.questionText,
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.testTag(
+                QuizScreenTestTags.QUESTION_TEXT
+            )
         )
 
         question.options.forEachIndexed { index, option ->
@@ -156,6 +165,10 @@ fun QuizScreen(
                 },
                 enabled = !uiState.hasAnswered,
                 modifier = Modifier.fillMaxWidth()
+                    .testTag(
+                        QuizScreenTestTags.answer(
+                        index)
+                    )
             ) {
                 val optionLetter =
                     ('A'.code + index).toChar()
@@ -175,7 +188,14 @@ fun QuizScreen(
 
             Button(
                 onClick = onNextQuestion,
-                modifier = Modifier.fillMaxWidth()
+                enabled =
+                    uiState.hasAnswered &&
+                            !uiState.isSavingResult,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(
+                        QuizScreenTestTags.NEXT_BUTTON
+                    )
             ) {
                 Text(
                     text = when {
@@ -214,11 +234,18 @@ private fun AnswerFeedbackCard(
                 } else {
                     "Not quite"
                 },
+                modifier = Modifier.testTag(
+                    QuizScreenTestTags.FEEDBACK
+                ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
 
-            Text(text = explanation)
+            Text(text = explanation,
+                modifier = Modifier.testTag(
+                    QuizScreenTestTags.EXPLANATION
+                )
+            )
         }
     }
 }
